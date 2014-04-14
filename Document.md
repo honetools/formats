@@ -110,10 +110,16 @@ A signed integer value.
 
 A font specification that consists of a typeface and size, expressed as a dictionary. Currently, no guarantees are made for the font being actually available on the target device.
 
-    title~font: { typeface: "Helvetica Neue", size: 14 }
+    title~font:
+      typeface: "Helvetica Neue"
+      size: 14
 
 ### color
 
 An array of RGBA values in device RGB color space, all expressed as float values between 0.0 and 1.0.
 
-    background~color: [0, 1, 0, 0.32]
+    background~color:
+       - 0
+       - 1
+       - 0
+       - 0.32

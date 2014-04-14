@@ -10,7 +10,7 @@ This is the API to the Sway cloud service.
 
 
 
-## Device API
+## [Device API](Device API.md)
 
 This is the API that individual devices should be implement, so you could edit them in real time with the Sway tool over a local Bonjour connection. The official Sway libraries that you link in your app implement this.
 
