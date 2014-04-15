@@ -106,6 +106,13 @@ A signed integer value.
     items~int: 6
     negativeSteps~int: -2
 
+### string
+
+A string value. In YAML, strings without spaces don’t have to be enclosed in quotes.
+
+    title~string: "Hello world"
+    label~string: Welcome
+
 ### font
 
 A font specification that consists of a typeface and size, expressed as a dictionary. Currently, no guarantees are made for the font being actually available on the target device.
