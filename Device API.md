@@ -40,21 +40,11 @@ Request a tree of represented objects and their values.
 
 	PUT /v1/classes/SomeClass/values
 	[{
-		"name": "parameter_name",
-		"type": "float"
-		"value": 1234.0
-	}]
-
-	PUT /v1/classes/SomeClass/values
-	[{
-		"name": "parameter_name~type",
-		"value": {
-			// this is unlikely: better done in themes files
-			"ipad~landscape": 123,
-			"android": 456,
-			"default": 12,
-			"customTheme": 56
-		}
+		"parameter_name~float": 123.5,
+	},
+	{
+		"parameter~string": "hello"
+	}
 	}]
 
 
