@@ -18,9 +18,9 @@ Authentication examples:
 
 #### Request
 
-    GET /v1/apps/ZOyIygCyaOW6GjVnihtTFtIS9PNmskdyMlNKiuyjfzw%3D/manifest?access_token=4T%2BwCx3LXFNdCEsPAgRFZtleO30tX0xeR4O0BlrNZx4%3D
+    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest?access_token=4T%2BwCx3LXFNdCEsPAgRFZtleO30tX0xeR4O0BlrNZx4%3D
 
-    GET /v1/apps/ZOyIygCyaOW6GjVnihtTFtIS9PNmskdyMlNKiuyjfzw%3D/manifest
+    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest
     Authorization: Bearer 4T+wCx3LXFNdCEsPAgRFZtleO30tX0xeR4O0BlrNZx4=
 
 #### Response
@@ -33,10 +33,12 @@ Authentication examples:
 
 ### Errors
 
-If a response to a given request is an error (anything other than HTTP 200 or 300 series), this is reflected by the HTTP status code (400 series: client errors, 500 series: server errors), as well as a JSON dictionary in the response body, containing a textual description of the error under the `error` key.
+If a response to a given request is an error (anything other than HTTP 200 or 300 series), this is reflected by the HTTP status code (400 series: client errors, 500 series: server errors), as well as a JSON dictionary in the response body, containing info about it in the error dictionary. "error.name" is a machine-readable error name, while error.message is a human-readable name that may change frequently, be localized etc.
 
     {
-      "error": "This document does not exist."
+      "error":
+        { "name": "DocumentNotFoundError",
+         "message": "This document does not exist."
     }
 
 
@@ -54,23 +56,24 @@ The manifest is a key resource of each Sway document, containing metadata as wel
 
 ### Get manifest
 
-    GET /v1/apps/ZOyIygCyaOW6GjVnihtTFtIS9PNmskdyMlNKiuyjfzw%3D/manifest
+    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest
 
 #### Response
 
  * `404 Not Found.` This document was not found.
+ * `304 Not Modified.` An ETag was included in the request, and the manifest on the server has the same ETag, i.e the client already has the current version.
  * `200 OK.` Everything is fine with the manifest. The document body contains the manifest content in YAML format, verbatim as it was previously uploaded. The content type is application/x-yaml.
 
 
 
 ### Put manifest
 
-    PUT /v1/apps/ZOyIygCyaOW6GjVnihtTFtIS9PNmskdyMlNKiuyjfzw%3D/manifest
+    PUT /v1/apps/53551a31e9cb4e000027f3f8/manifest
     Content-type: application/x-yaml
 
 #### Response
 
- * `200 OK.` All good, current version of the manifest was put. Additionally, the body contains the resources that the server is missing, similarly as missing_resources response. Response content type is application/x-yaml.
+ * `200 OK.` All good, current version of the manifest was put. Additionally, the body contains the resources that the server is missing, similarly as missing_resources response. Response content type is application/x-yaml. The header also contains ETag for the manifest.
  * `400 Bad Request.` The document was possibly malformed. The JSON error body contains more information. Response content type is application/json.
 
 
@@ -79,21 +82,20 @@ The manifest is a key resource of each Sway document, containing metadata as wel
 
 It is possible that a manifest file has been uploaded to the server, but some of the referred resources are missing. The client can ask the server any time what resources it is missing.
 
-    GET /v1/apps/ZOyIygCyaOW6GjVnihtTFtIS9PNmskdyMlNKiuyjfzw%3D/manifest/missing_resources
+    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest/missing_resources
 
 #### Response
 
- * `200 OK.` The list of missing resources is returned as a YAML array (the subtree of the manifest "themes" section).
+ * `200 OK.` The list of missing resources is returned as JSON object, with the key "missing_resources" whose value is an array of the missing resource dictionaries. The result is JSON because it’s not versioned/checksummed, it is just an ephemeral item based on the current state of the system.
 
     ```
-  - themes:
-    - default:
-      - values.yaml: VWUpRQ0GDLcorRT+a0wJsB1o0OU2M8CQeUSjmLAwvgg=
+    { "missing_resources": [
+      { "name": "values.yaml", "theme": "default", "checksum": "VWUpRQ0GDLcorRT+a0wJsB1o0OU2M8CQeUSjmLAwvgg=" },
+      { "name": "values.yaml", "theme": "anotherTheme", "checksum": "4T+wCx3LXFNdCEsPAgRFZtleO30tX0xeR4O0BlrNZx4=" }
+    ]}
     ```
 
-  The response can also be empty, indicating that all resources are represented on the server.
-
- * `400 Bad Request.` The document was possibly malformed. The JSON error body contains more information. Response content type is application/json.
+ * `204 No Content`. All resources are correctly represented on the server.
 
 
 
