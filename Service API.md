@@ -73,7 +73,7 @@ The manifest is a key resource of each Sway document, containing metadata as wel
 
 #### Response
 
- * `200 OK.` All good, current version of the manifest was put. Additionally, the body contains the resources that the server is missing, similarly as missing_resources response. Response content type is application/x-yaml. The header also contains ETag for the manifest.
+ * `200 OK.` All good, current version of the manifest was put. Additionally, the body contains the resources that the server is missing, similarly as missing_resources response. Response content type is application/json. The header also contains ETag for the manifest.
  * `400 Bad Request.` The document was possibly malformed. The JSON error body contains more information. Response content type is application/json.
 
 
@@ -101,4 +101,31 @@ It is possible that a manifest file has been uploaded to the server, but some of
 
 ## Individual resources
 
-These are the values.yaml files of each theme contained in the document, and in the future, also other assets (images, sounds, fonts etc) contained in each theme.
+These are the values.yaml files of each theme contained in the document, and in the future, also other assets (images, sounds, fonts etc) contained in each theme. The PUT and GET commands for them are pretty straightforward.
+
+
+### Put resource
+
+Note how the theme and resource file name are simply part of the URL.
+
+    PUT /v1/apps/53551a31e9cb4e000027f3f8/resources/default/values.yaml
+
+Request body is the content of the resource.
+
+#### Response
+
+  * `200 OK.` The resource was successfully put. The `ETag` header also contains the resource ETag.
+  * `404 Not Found.` The application was not found.
+
+### Get resource
+
+Whenever possible, include an ETag header in the request, to cut down unnecessary traffic: if you already have the same version of the resource as is on the server, `304 Not Modified` is returned.
+
+  GET /v1/apps/53551a31e9cb4e000027f3f8/resources/default/values.yaml
+  ETag: VWUpRQ0GDLcorRT+a0wJsB1o0OU2M8CQeUSjmLAwvgg=
+
+#### Response
+
+ * `200 OK.` The resource was retrieved successfully, the body contains the resource content.
+ * `304 Not Modified.` The resource representation on the server is the same as specified by the ETag, i.e the server and client both have the same resource and it does not need to be transmitted.
+ * `404 Not Found.` The resource or application was not found.
