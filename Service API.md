@@ -56,7 +56,7 @@ The manifest is a key resource of each Sway document, containing metadata as wel
 
 ### Get manifest
 
-    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest
+    GET /v1/53551a31e9cb4e000027f3f8/manifest
 
 #### Response
 
@@ -68,7 +68,7 @@ The manifest is a key resource of each Sway document, containing metadata as wel
 
 ### Put manifest
 
-    PUT /v1/apps/53551a31e9cb4e000027f3f8/manifest
+    PUT /v1/53551a31e9cb4e000027f3f8/manifest
     Content-type: application/x-yaml
 
 #### Response
@@ -82,7 +82,7 @@ The manifest is a key resource of each Sway document, containing metadata as wel
 
 It is possible that a manifest file has been uploaded to the server, but some of the referred resources are missing. The client can ask the server any time what resources it is missing.
 
-    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest/missing_resources
+    GET /v1/53551a31e9cb4e000027f3f8/manifest/missing_resources
 
 #### Response
 
@@ -108,7 +108,7 @@ These are the values.yaml files of each theme contained in the document, and in 
 
 Note how the theme and resource file name are simply part of the URL.
 
-    PUT /v1/apps/53551a31e9cb4e000027f3f8/resources/default/values.yaml
+    PUT /v1/53551a31e9cb4e000027f3f8/resources/default/values.yaml
 
 Request body is the content of the resource.
 
@@ -121,8 +121,8 @@ Request body is the content of the resource.
 
 Whenever possible, include an ETag header in the request, to cut down unnecessary traffic: if you already have the same version of the resource as is on the server, `304 Not Modified` is returned.
 
-  GET /v1/apps/53551a31e9cb4e000027f3f8/resources/default/values.yaml
-  ETag: VWUpRQ0GDLcorRT+a0wJsB1o0OU2M8CQeUSjmLAwvgg=
+    GET /v1/53551a31e9cb4e000027f3f8/resources/default/values.yaml
+    ETag: VWUpRQ0GDLcorRT+a0wJsB1o0OU2M8CQeUSjmLAwvgg=
 
 #### Response
 
