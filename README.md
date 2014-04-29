@@ -4,7 +4,7 @@ This repo contains the specifications for Sway formats and protocols. In particu
 
 
 
-## Service API
+## [Service API](Service API.md)
 
 This is the API to the Sway cloud service.
 
