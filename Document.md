@@ -45,13 +45,13 @@ The manifest file specifies metadata about the document, as well as list of the 
 
 An example manifest.yaml file:
 
-    - document_version: 1
-    - app_token: 8Ap4f3SSqV4WW0cHAvT+k3NYP73AJbLIvfAmLMSPz/Q=
-    - resources:
-      - default
-        - values.yaml: 6jKTFKr7U8CKUUGvSkrlS71ahtu3cD2lNy70EBPRvXg=
-      - lightTheme
-        - values.yaml: fSDObOmAC1XzreIzoOSAJfo6ueg0OkuoHsmaT/HSgwI=
+    document_version: 1
+    app_token: 8Ap4f3SSqV4WW0cHAvT+k3NYP73AJbLIvfAmLMSPz/Q=
+    resources:
+      default
+        values.yaml: 6jKTFKr7U8CKUUGvSkrlS71ahtu3cD2lNy70EBPRvXg=
+      lightTheme
+        values.yaml: fSDObOmAC1XzreIzoOSAJfo6ueg0OkuoHsmaT/HSgwI=
 
 `document_version` defines the Sway document version. Currently, only version 1 is defined.
 
@@ -65,23 +65,25 @@ The “default” theme must always be present. It must contain all values and a
 
 ## values.yaml
 
-The values file specifies the objects, keys and values specified by one theme. It has a two-level namespace, with an array of document objects, and each object containing an array keys and values.
+The values file specifies the objects, keys and values specified by one theme. It has a two-level namespace, with a dictionary of document objects, and each object containing a dictionary keys and values.
+
+Standard YAML serialization does not guarantee preserving the ordering of dictionary keys across invocations. The Sway document loader/saver uses a modified serializer that treats the top-level objects, and the list of parameters in each object, as arrays and preserves their ordering across saves.
 
 An example values.yaml file:
 
-    - Items:
-      - background~color:
+    CollectionEntries:
+      background~color:
         - 1
         - 0
         - 0
         - 1
-      - top_margin~float: 48
-      - items~int: 6
-      - someTitle~font:
-          typeface: “Helvetica Light”
-          size: 14
-    - BackButton:
-      - leftPadding~float: 24.0
+      top_margin~float: 48
+      items~int: 6
+      someTitle~font:
+        typeface: “Helvetica Light”
+        size: 14
+    BackButton:
+      leftPadding~float: 24.0
 
 This document contains two top-level objects, “Items” and “BackButton”. “Items” contains a background color, a top margin, an item count, and a font. “BackButton” contains left padding.
 
