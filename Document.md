@@ -35,6 +35,8 @@ A Sway container layout is as follows:
 
 The container consists of a manifest, and one or more theme folders. Each theme folder contains a values file, and in future versions of the format, resource files.
 
+The `default` theme must always be present. The document may also contain one or more additional themes.
+
 YAML is used as the base format for the key/value stores (manifest and values).
 
 
@@ -47,7 +49,7 @@ An example manifest.yaml file:
 
     format: 1
     app_identifier: 8Ap4f3SSqV4WW0cHAvT+k3NYP73AJbLIvfAmLMSPz/Q=
-    themes:
+    resources:
       default:
         values.yaml: 6jKTFKr7U8CKUUGvSkrlS71ahtu3cD2lNy70EBPRvXg=
       lightTheme:
@@ -91,7 +93,7 @@ The top-level object keys are just names that are relevant to the application be
 
 The key names within one object should reflect the item in the application that the key represents. Typically, this would be “top_margin”, “left_padding”, “title”, “background” etc. The key names are suffixed by the Sway data type, separated by ~ (tilde), so the final key name in the document might be “top_margin~float”, to represent the top margin of a given object as a floating-point value.
 
-The following data types are defined in Sway document v1.
+The following data types are defined in Sway document format v1.
 
 ### float
 
