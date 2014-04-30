@@ -45,17 +45,17 @@ The manifest file specifies metadata about the document, as well as list of the 
 
 An example manifest.yaml file:
 
-    document_version: 1
-    app_token: 8Ap4f3SSqV4WW0cHAvT+k3NYP73AJbLIvfAmLMSPz/Q=
-    resources:
-      default
+    format: 1
+    app_identifier: 8Ap4f3SSqV4WW0cHAvT+k3NYP73AJbLIvfAmLMSPz/Q=
+    themes:
+      default:
         values.yaml: 6jKTFKr7U8CKUUGvSkrlS71ahtu3cD2lNy70EBPRvXg=
-      lightTheme
+      lightTheme:
         values.yaml: fSDObOmAC1XzreIzoOSAJfo6ueg0OkuoHsmaT/HSgwI=
 
-`document_version` defines the Sway document version. Currently, only version 1 is defined.
+`format` defines the Sway document version. Currently, only version 1 is defined.
 
-`app_token` is the token to be used to identify the app in the Sway cloud service.
+`app_identifier` is the token to be used to identify the app in the Sway cloud service.
 
 `resources` is a representation of each theme folder together with the resources it contains. Each resource is listed with the checksum of its contents calculated over the bytestream using SHA256 and output here as base64.
 
