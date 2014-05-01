@@ -33,12 +33,12 @@ Authentication examples:
 
 ### Errors
 
-If a response to a given request is an error (anything other than HTTP 200 or 300 series), this is reflected by the HTTP status code (400 series: client errors, 500 series: server errors), as well as a JSON dictionary in the response body, containing info about it in the error dictionary. "error.name" is a machine-readable error name, while error.message is a human-readable name that may change frequently, be localized etc.
+If a response to a given request is an error (anything other than HTTP 200 or 300 series), this is reflected by the HTTP status code (400 series: client errors, 500 series: server errors), as well as a JSON dictionary in the response body, containing info about it in the error dictionary. "error.name" is a machine-readable error name and can be expected to stay consistent over localizations and service versions, while error.message is a human-readable name that may change frequently, be localized etc.
 
     {
       "error":
         { "name": "DocumentNotFoundError",
-         "message": "This document does not exist."
+         "message": "This document does not exist." }
     }
 
 
@@ -116,6 +116,7 @@ Request body is the content of the resource.
 
   * `200 OK.` The resource was successfully put. The `ETag` header also contains the resource ETag.
   * `404 Not Found.` The application was not found.
+  * `409 Conflict.` Either there is no manifest for this app, or the manifest does not contain a reference to this resource. Sway requires that all uploaded resources are referred to in the manifest. This probably means that you are trying to upload a resource before uploading an up-to-date manifest. See the `error` object in the body for details.
 
 ### Get resource
 
