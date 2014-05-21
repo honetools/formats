@@ -75,6 +75,8 @@ The manifest is a key resource of each Sway document, containing metadata as wel
 
  * `200 OK.` All good, current version of the manifest was put. Additionally, the body contains the resources that the server is missing, similarly as missing_resources response. Response content type is application/json. The header also contains ETag for the manifest.
  * `400 Bad Request.` The document was possibly malformed. The JSON error body contains more information. Response content type is application/json.
+ * `204 No Content`. Manifest was successfully received, but all resources are already correctly represented on the server.
+ * `304 Not Modified`. The version of the manifest on the server is the same one that is already there, so the manifest wasn’t stored. (Note that this doesn’t tell you anything about missing resources.)
 
 
 

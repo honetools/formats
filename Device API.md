@@ -38,7 +38,7 @@ Request a tree of represented objects and their values.
 
 ## Put values
 
-	PUT /v1/classes/SomeClass/values
+	PUT /v1/objects/SomeClass/parameters
 	[{
 		"parameter_name~float": 123.5,
 	},
@@ -47,6 +47,15 @@ Request a tree of represented objects and their values.
 	}
 	}]
 
+
+	PUT /v1/objects/SomeClass/parameters/themeName
+[{
+	"parameter_name~float": 123.5,
+},
+{
+	"parameter~string": "hello"
+}
+}]
 
 
 ## PNG representation
