@@ -5,6 +5,27 @@ The Sway tool discovers compatible devices over Bonjour, looking for “_sway._t
 The Sway protocol consists of a few implemented HTTP endpoints.
 
 
+## Device guid
+
+PUT /v1/device_session_start
+
+Content:
+{
+	device_talkback_url: http://something:12345/v1/device_talkback
+}
+
+Response: same as device_info below
+
+GET /v1/device_info
+
+Returns device GUID and name. GUID must remain stable as long as this app session is running, even if it goes to background and comes to foreground several times.
+
+{
+	device_name: "John Appleseed’s iPhone",
+	device_guid: "8746A183-6470-496C-8F62-45396A13B353",
+	app_id: "12345" # Sway app identifier
+}
+
 
 ## Object tree
 
@@ -61,3 +82,22 @@ Request a tree of represented objects and their values.
 ## PNG representation
 
 	GET /v1/objects/<guid>/png_representation
+
+
+# Sway device talkback API
+
+PUT /v1/device_talkback
+
+Receive an array of log entries (even if just one) from device about values being used in real time
+
+[{
+	time: 1231233128, # timestamp
+	device_guid: guid,
+	class: objectClass,
+	parameter:, objectParameterName,
+	parameter_type: type.
+	theme: themeName,
+	value: currentValue
+}]
+
+returns: 200 OK
