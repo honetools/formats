@@ -1,6 +1,6 @@
 # Sway cloud service API
 
-This is the API implemented by Sway cloud service, with API endpoints running at `https://swayapp.net/v1/`. The desktop tool puts Sway documents to the API, and clients can retrieve current values and assets.
+This is the API implemented by Sway cloud service, with API endpoints running at `https://swy.io/v1/`. The desktop tool puts Sway documents to the API, and clients can retrieve current values and assets.
 
 The goal of the cloud service is to let users test the values encoded in Sway documents on client apps and devices. It is explicitly not designed to be a version control system: for this purpose, real version control systems (Git etc) should be used to manage the documents. Most PUT requests unconditionally overwrite the current state of a resource.
 
@@ -12,7 +12,11 @@ The goal of the cloud service is to let users test the values encoded in Sway do
 
 Authentication is implemented with OAuth2 Bearer tokens as specified in [RFC6750](http://tools.ietf.org/html/rfc6750). The token can be passed either as Authorization header, or as access_token parameter to the request.
 
-You can obtain the tokens from the [Sway web app](https://swayapp.net/apps). All tokens are unique for each user-app combination, i.e they are valid only for this particular Sway user accessing this particular app.
+There are two levels of access which correspond to two kinds of Bearer tokens: user tokens and document tokens.
+
+**User tokens** identify and authenticate a particular end user of Sway who has a user account on swy.io. You can obtain your user token on [swy.io/you](https://swy.io/you/). The user token provides full access to both Sway app API, as well as the app management API that lets the user enumerate and create new Sway apps. The user token should be used as authenticator in the Sway desktop tool.
+
+**App tokens** are associated with one Sway app, and provide read-only access to requests regarding one app. App tokens should be used as authenticators in the Sway device libraries. You can obtain the app token from the page of the individual app.
 
 Authentication examples:
 
@@ -48,17 +52,21 @@ If a response to a given request is an error (anything other than HTTP 200 or 30
 The current state of many resources in the Sway system is indicated by a base64-encoded hash of its contents, such as seen in the manifest file. You should use this hash as an ETag of your requests for this resource, to cut down unnecessary traffic.
 
 
-## Manifest
+## App API
+
+### Manifest
 
 The manifest is a key resource of each Sway document, containing metadata as well as a listing of other resources and their checksums. A complete representation of a Sway document can be obtained by first retrieving the manifest, and then the resources that it refers to.
 
 
 
-### Get manifest
+#### Get manifest
 
-    GET /v1/53551a31e9cb4e000027f3f8/manifest
+    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest
 
-#### Response
+Access level: user token or app token
+
+Response:
 
  * `404 Not Found.` This document was not found.
  * `304 Not Modified.` An ETag was included in the request, and the manifest on the server has the same ETag, i.e the client already has the current version.
@@ -66,12 +74,14 @@ The manifest is a key resource of each Sway document, containing metadata as wel
 
 
 
-### Put manifest
+#### Put manifest
 
-    PUT /v1/53551a31e9cb4e000027f3f8/manifest
+    PUT /v1/apps/53551a31e9cb4e000027f3f8/manifest
     Content-type: application/x-yaml
 
-#### Response
+Access level: user token
+
+Response:
 
  * `200 OK.` All good, current version of the manifest was put. Additionally, the body contains the resources that the server is missing, similarly as missing_resources response. Response content type is application/json. The header also contains ETag for the manifest.
  * `400 Bad Request.` The document was possibly malformed. The JSON error body contains more information. Response content type is application/json.
@@ -80,13 +90,15 @@ The manifest is a key resource of each Sway document, containing metadata as wel
 
 
 
-### Get missing resources for manifest
+#### Get missing resources for manifest
 
 It is possible that a manifest file has been uploaded to the server, but some of the referred resources are missing. The client can ask the server any time what resources it is missing.
 
-    GET /v1/53551a31e9cb4e000027f3f8/manifest/missing_resources
+    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest/missing_resources
 
-#### Response
+Access level: user token or app token
+
+Response:
 
  * `200 OK.` The list of missing resources is returned as JSON object, with the key "missing_resources" whose value is an array of the missing resource dictionaries. The result is JSON because it’s not versioned/checksummed, it is just an ephemeral item based on the current state of the system.
 
@@ -101,34 +113,68 @@ It is possible that a manifest file has been uploaded to the server, but some of
 
 
 
-## Individual resources
+### Individual resources
 
 These are the values.yaml files of each theme contained in the document, and in the future, also other assets (images, sounds, fonts etc) contained in each theme. The PUT and GET commands for them are pretty straightforward.
 
 
-### Put resource
+#### Put resource
 
 Note how the theme and resource file name are simply part of the URL.
 
-    PUT /v1/53551a31e9cb4e000027f3f8/resources/default/values.yaml
+    PUT /v1/apps/53551a31e9cb4e000027f3f8/resources/default/values.yaml
+
+Access level: user token
 
 Request body is the content of the resource.
 
-#### Response
+Response:
 
   * `200 OK.` The resource was successfully put. The `ETag` header also contains the resource ETag.
   * `404 Not Found.` The application was not found.
   * `409 Conflict.` Either there is no manifest for this app, or the manifest does not contain a reference to this resource. Sway requires that all uploaded resources are referred to in the manifest. This probably means that you are trying to upload a resource before uploading an up-to-date manifest. See the `error` object in the body for details.
 
-### Get resource
+#### Get resource
 
 Whenever possible, include an ETag header in the request, to cut down unnecessary traffic: if you already have the same version of the resource as is on the server, `304 Not Modified` is returned.
 
-    GET /v1/53551a31e9cb4e000027f3f8/resources/default/values.yaml
+    GET /v1/apps/53551a31e9cb4e000027f3f8/resources/default/values.yaml
     ETag: VWUpRQ0GDLcorRT+a0wJsB1o0OU2M8CQeUSjmLAwvgg=
 
-#### Response
+Access level: user token or app token
+
+Response
 
  * `200 OK.` The resource was retrieved successfully, the body contains the resource content.
  * `304 Not Modified.` The resource representation on the server is the same as specified by the ETag, i.e the server and client both have the same resource and it does not need to be transmitted.
  * `404 Not Found.` The resource or application was not found.
+
+
+
+## App management API
+
+You use the app management API to retrieve the list of apps for a given user, create new ones, and retrieve and change metadata regarding an app, such as the app name or list of authorized users.
+
+Deleting an app is currently not supported in the management API. You must use the Sway web app for this.
+
+### Get apps
+
+    GET /v1/apps
+
+Access level: user token
+
+Response
+
+* `200 OK.` List of apps for the user.
+
+
+    [
+      {
+        "name": "My Awesome App",
+        "id": 53551a31e9cb4e000027f3f8
+      },
+      {
+        "name": "Another Awesome App",
+        "id": 53551a31e9cb4e000027bee1
+      }
+    ]
