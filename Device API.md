@@ -29,31 +29,21 @@ Returns device GUID and name. GUID must remain stable as long as this app sessio
 
 ## Object tree
 
-Request a tree of represented objects and their values.
+Request a tree of represented objects and their values. JSON structure is the same as in the document.
 
 	GET /v1/objects
 
+[
 	{
-		"View controllers": [
-			{
-				"class": "SomeClass",
-				"guid": "something",
-				"child_objects": [],
-				"parameters": [
-					{
-						"name": "something",
-						"type": "int"
-						"value": 123
-					}
-				]
-			}
-		],
-		"Views": [
-			{
-				"class": …
-			}
-		]
+		"someObject":
+		[{"parameter1~float":23.4},{"parameter2~string":"hello"}]
+	},
+	{
+		"anotherObject":
+		[{"parameter3~float":23.4},{"parameter4~string":"hello"}]
 	}
+]
+
 
 
 
@@ -82,6 +72,8 @@ Request a tree of represented objects and their values.
 ## PNG representation
 
 	GET /v1/objects/<guid>/png_representation
+
+  GET /v1/png_representation
 
 
 # Sway device talkback API
