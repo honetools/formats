@@ -85,7 +85,7 @@ Receive an array of log entries (even if just one) from device about values bein
 [{
 	time: 1231233128, # timestamp
 	device_guid: guid,
-	class: objectClass,
+	object: objectClass,
 	parameter:, objectParameterName,
 	parameter_type: type.
 	theme: themeName,
