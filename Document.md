@@ -4,7 +4,7 @@ The Sway document is a collection of values and resources relating to one app wh
 
 On the editing side, the tool edits the values in this document.
 
-On the device side, the device/library loads values from this document.
+On the device side, the document is typically bundled in the app, and the library loads values from this bundled document.
 
 The job of Sway cloud service is, among other things, to efficiently get the document from the tool to devices.
 
@@ -25,17 +25,25 @@ The job of Sway cloud service is, among other things, to efficiently get the doc
 
 A Sway document is a folder container with .sway extension. This is the package bundle document that the Sway tool works with. On the file system and version control level, though, it is just a folder with specified format and contents.
 
-A Sway container layout is as follows:
+A minimal Sway container layout is as follows:
 
     manifest.yaml
     default/
       values.yaml
-    lightTheme/
+
+A container with some themes looks like this:
+
+    manifest.yaml
+    default/
+      values.yaml
+    otherTheme/
+      values.yaml
+    anotherTheme/
       values.yaml
 
 The container consists of a manifest, and one or more theme folders. Each theme folder contains a values file, and in future versions of the format, resource files.
 
-The `default` theme must always be present. The document may also contain one or more additional themes.
+The `default` theme folder must always be present. In addition, the document may also contain one or more additional themes.
 
 YAML is used as the base format for the key/value stores (manifest and values).
 
@@ -48,7 +56,7 @@ The manifest file specifies metadata about the document, as well as list of the 
 An example manifest.yaml file:
 
     format: 1
-    app_identifier: 8Ap4f3SSqV4WW0cHAvT+k3NYP73AJbLIvfAmLMSPz/Q=
+    app_identifier: 5363a960e914803c292bbd4b
     resources:
       default:
         values.yaml: 6jKTFKr7U8CKUUGvSkrlS71ahtu3cD2lNy70EBPRvXg=
@@ -59,7 +67,7 @@ An example manifest.yaml file:
 
 `app_identifier` is the token to be used to identify the app in the Sway cloud service.
 
-`resources` is a representation of each theme folder together with the resources it contains. Each resource is listed with the checksum of its contents calculated over the bytestream using SHA256 and output here as base64.
+`resources` is a representation of each theme folder together with the resources it contains. Each resource is listed with the checksum of its contents calculated over the resource’s bytestream using SHA256-base64.
 
 The “default” theme must always be present. It must contain all values and assets that can be possibly requested by clients, as it is the base/fallback used in case other themes do not contain the requested value/asset.
 
@@ -87,7 +95,7 @@ An example values.yaml file:
     BackButton:
       leftPadding~float: 24.0
 
-This document contains two top-level objects, “Items” and “BackButton”. “Items” contains a background color, a top margin, an item count, and a font. “BackButton” contains left padding.
+This document contains two top-level objects, “CollectionEntries” and “BackButton”. “Items” contains a background color, a top margin, an item count, and a font. “BackButton” contains left padding.
 
 The top-level object keys are just names that are relevant to the application being developed. In object-oriented architecture, they might be the same as class names, or they might use another naming scheme if values from a given category are used by more than one object. The top-level object names must be unique.
 
@@ -119,11 +127,17 @@ A string value. In YAML, strings without spaces don’t have to be enclosed in q
 
 ### font
 
-A font specification that consists of a typeface and size, expressed as a dictionary. Currently, no guarantees are made for the font being actually available on the target device.
+A font specification that consists of typeface, size, number style and spacing expressed as a dictionary. Currently, no guarantees are made for the font being actually available on the target device, or the font supporting the number style and spacing OpenType attributes.
 
     title~font:
       typeface: "Helvetica Neue"
       size: 14
+      number_style: oldstyle
+      number_spacing: proportional
+
+Allowed values for `number_style` are `regular` (default) and `oldstyle`. Allowed values for `number_spacing` are `proportional` (default) and `monospaced`.
+
+The number_style and number_spacing keys are optional. If not present, they must be treated as having the default values for this font.
 
 ### color
 
