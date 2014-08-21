@@ -12,7 +12,7 @@ The job of Sway cloud service is, among other things, to efficiently get the doc
 
 ## Design goals
 
-* **Human-readable and -editable.** Humans should be able to just open the document and edit it with any tool of their liking.
+* **Human-readable and -editable.** Humans should be able to just open the document source and edit it with any tool of their liking.
 
 * **Machine-readable and -editable.** It must be based on existing serialization formats with widespread tool support, so existing tools can be modified to easily work with the format.
 
@@ -31,9 +31,10 @@ A minimal Sway container layout is as follows:
     default/
       values.yaml
 
-A container with some themes looks like this:
+A more complete container with some themes and alias info looks like this:
 
     manifest.yaml
+    aliases.yaml
     default/
       values.yaml
     otherTheme/
@@ -45,7 +46,7 @@ The container consists of a manifest, and one or more theme folders. Each theme 
 
 The `default` theme folder must always be present. In addition, the document may also contain one or more additional themes.
 
-YAML is used as the base format for the key/value stores (manifest and values).
+YAML is used as the base format for the key/value stores (manifest, aliases and values).
 
 
 
@@ -57,6 +58,7 @@ An example manifest.yaml file:
 
     format: 1
     app_identifier: 5363a960e914803c292bbd4b
+    aliases.yaml: 7ghj4FKr7U8CKUUGvSkrlS71ahtu3cD2lNy7f34f=
     resources:
       default:
         values.yaml: 6jKTFKr7U8CKUUGvSkrlS71ahtu3cD2lNy70EBPRvXg=
@@ -69,6 +71,8 @@ An example manifest.yaml file:
 
 `resources` is a representation of each theme folder together with the resources it contains. Each resource is listed with the checksum of its contents calculated over the resource’s bytestream using SHA256-base64.
 
+`aliases.yaml` is a checksum of the optional aliases file, if present.
+
 The “default” theme must always be present. It must contain all values and assets that can be possibly requested by clients, as it is the base/fallback used in case other themes do not contain the requested value/asset.
 
 
@@ -77,16 +81,12 @@ The “default” theme must always be present. It must contain all values and a
 
 The values file specifies the objects, keys and values specified by one theme. It has a two-level namespace, with a dictionary of document objects, and each object containing a dictionary keys and values.
 
-Standard YAML serialization does not guarantee preserving the ordering of dictionary keys across invocations. The Sway document loader/saver uses a modified serializer that treats the top-level objects, and the list of parameters in each object, as arrays and preserves their ordering across saves.
+Standard YAML serialization does not guarantee preserving the ordering of dictionary keys across invocations. The Sway document loader/saver uses a modified serializer that treats the top-level objects, and the list of values in each object, as arrays and preserves their ordering across saves.
 
 An example values.yaml file:
 
     CollectionEntries:
-      background~color:
-        - 1
-        - 0
-        - 0
-        - 1
+      background~color: [ 1, 0, 0, 1 ]
       top_margin~float: 48
       items~int: 6
       someTitle~font:
@@ -97,9 +97,11 @@ An example values.yaml file:
 
 This document contains two top-level objects, “CollectionEntries” and “BackButton”. “Items” contains a background color, a top margin, an item count, and a font. “BackButton” contains left padding.
 
-The top-level object keys are just names that are relevant to the application being developed. In object-oriented architecture, they might be the same as class names, or they might use another naming scheme if values from a given category are used by more than one object. The top-level object names must be unique.
+The top-level object keys are just names that are relevant to the application being developed. In object-oriented architecture, they might be the same as class names, or they might use another naming scheme if values from a given category are used by more than one object.
 
 The key names within one object should reflect the item in the application that the key represents. Typically, this would be “top_margin”, “left_padding”, “title”, “background” etc. The key names are suffixed by the Sway data type, separated by ~ (tilde), so the final key name in the document might be “top_margin~float”, to represent the top margin of a given object as a floating-point value.
+
+The top-level object names must be unique. The value names must be unique within each object. For example, there may not be two objects called `container`. One `container` object may not have two values called `background`. However, there may be values called `background1` and `background2` in `container`. If there are objects `container` and `item`, both of them may have a value called `background`.
 
 The following data types are defined in Sway document format v1.
 
@@ -143,8 +145,27 @@ The number_style and number_spacing keys are optional. If not present, they must
 
 An array of RGBA values in device RGB color space, all expressed as float values between 0.0 and 1.0.
 
-    background~color:
-       - 0
-       - 1
-       - 0
-       - 0.32
+    background~color: [ 0, 1, 0, 0.32 ]
+
+
+
+## aliases.yaml
+
+This file defines “aliases”, or “nice names”, for objects and values. The goal of aliases is to provide friendlier names to these items. The original object and value names are defined by the engineer in code and cannot be easily changed, but the engineer-defined names may not be the most meaningful to the non-technical Sway tool users. The aliases helps to bridge this gap by letting the tool users easily rename the items to something more meaningful.
+
+Using aliases is completely optional. Only some, or all, or no objects and values can have aliases defined. If there are no aliases defined, the `aliases.yaml` file, and the corresponding entry in the document’s `manifest.yaml` may not exist.
+
+An example aliases file:
+
+container:
+  alias: Widgets
+  values:
+    background: "Background color"
+    borderStroke: "Border width"
+
+The top-level keys are same objects that are defined in `values.yaml`. If the object itself has an alias, it is under the `alias` key. If any of the object’s values have aliases, these are defined in the `values` dictionary.
+
+The naming rules for aliases are the same as in `values.yaml`:
+
+* Object aliases must be unique and must not be the same as alias or real name of any other object.
+* Value aliases must be unique within the same object and must not be the same as alias or real name of any other value within the same object.
