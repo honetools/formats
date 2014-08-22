@@ -111,6 +111,50 @@ Response:
 
  * `204 No Content`. All resources are correctly represented on the server.
 
+If a reference to `aliases.yaml` is present in the manifest, but the aliases file has not yet been uploaded, the `missingResources` response will include that as well.
+
+```
+{ "missing_resources": [
+  { "name": "aliases.yaml", "theme": "", "checksum": "xEZBszGCykswqQ7jTbvbyaOSVXsTkPIWjE1bQ1vPOMs=" },
+  { "name": "values.yaml", "theme": "default", "checksum": "VWUpRQ0GDLcorRT+a0wJsB1o0OU2M8CQeUSjmLAwvgg=" },
+  { "name": "values.yaml", "theme": "anotherTheme", "checksum": "4T+wCx3LXFNdCEsPAgRFZtleO30tX0xeR4O0BlrNZx4=" }
+]}
+```
+
+
+### Aliases
+
+The optional aliases.yaml file defines object and value name aliases that, unlike the original object and value names, can be modified by the end user at any time using the Sway editor tool. See the [document format](Document.md) for more details about aliases.
+
+These simple endpoints let you get or put the aliases content.
+
+#### Get aliases
+
+    GET /v1/apps/53551a31e9cb4e000027f3f8/aliases
+
+Access level: user token or app token
+
+Response:
+
+* `404 Not Found.` This document was not found.
+* `304 Not Modified.` An ETag was included in the request, and the manifest on the server has the same ETag, i.e the client already has the current version.
+* `200 OK.` Everything is fine with the manifest. The document body contains the aliases content in YAML format, verbatim as it was previously uploaded. The content type is application/x-yaml.
+
+
+
+#### Put aliases
+
+    PUT /v1/apps/53551a31e9cb4e000027f3f8/manifest
+    Content-type: application/x-yaml
+
+Access level: user token
+
+Response:
+
+* `200 OK.` All good, current version of the aliases was put. The header also contains ETag for the aliases.
+* `400 Bad Request.` The document was possibly malformed. The JSON error body contains more information. Response content type is application/json.
+* `304 Not Modified`. The version of the aliases on the server is the same one that is already there, so the aliases weren’t stored.
+
 
 
 ### Individual resources
@@ -136,10 +180,10 @@ Response:
 
 #### Get resource
 
-Whenever possible, include an ETag header in the request, to cut down unnecessary traffic: if you already have the same version of the resource as is on the server, `304 Not Modified` is returned.
+Whenever possible, include an If-None-Match header in the request, to cut down unnecessary traffic: if you already have the same version of the resource as is on the server, `304 Not Modified` is returned.
 
     GET /v1/apps/53551a31e9cb4e000027f3f8/resources/default/values.yaml
-    ETag: VWUpRQ0GDLcorRT+a0wJsB1o0OU2M8CQeUSjmLAwvgg=
+    If-None-Match: VWUpRQ0GDLcorRT+a0wJsB1o0OU2M8CQeUSjmLAwvgg=
 
 Access level: user token or app token
 
