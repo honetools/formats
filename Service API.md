@@ -70,6 +70,7 @@ Response:
 
  * `404 Not Found.` This document was not found.
  * `304 Not Modified.` An ETag was included in the request, and the manifest on the server has the same ETag, i.e the client already has the current version.
+ * `204 No Content.` No manifest has yet been uploaded for this app.
  * `200 OK.` Everything is fine with the manifest. The document body contains the manifest content in YAML format, verbatim as it was previously uploaded. The content type is application/x-yaml.
 
 
