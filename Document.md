@@ -105,6 +105,13 @@ The top-level object names must be unique. The value names must be unique within
 
 The following data types are defined in Sway document format v1.
 
+### bool
+
+A boolean with two possible values: 1 (“yes”, “on”) or 0 (“no”, “off”).
+
+    enabled~bool: 1
+    shouldReallyHappen~bool: 0
+
 ### float
 
 A signed floating point value with arbitrary precision. May be specified in the document with or without decimals.
