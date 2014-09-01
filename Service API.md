@@ -212,7 +212,6 @@ Response
 
 * `200 OK.` List of apps for the user.
 
-
     [
       {
         "name": "My Awesome App",
@@ -223,3 +222,26 @@ Response
         "id": 53551a31e9cb4e000027bee1
       }
     ]
+
+### Create an app
+
+    POST /v1/apps
+
+Access level: user token
+
+Request body should contain the name of the app encoded in JSON.
+
+    {
+      "name": "Great App"
+    }
+
+Response
+
+* `200 OK.` The app was created. The response contains the app name and ID.
+
+    {
+      "name": "Great App",
+      "id": 53551a31e9cb4e000027abcd
+    }
+
+* `400 Bad Request`. The app could not be created for some reason, e.g no name was supplied. The error response contains more details.
