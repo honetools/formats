@@ -1,8 +1,12 @@
 # Sway cloud service API
 
-This is the API implemented by Sway cloud service, with API endpoints running at `https://swy.io/v1/`. The desktop tool puts Sway documents to the API, and clients can retrieve current values and assets.
+This is the API implemented by Sway cloud service, with API endpoints running at `https://swy.io/v1/`.
 
-The goal of the cloud service is to let users test the values encoded in Sway documents on client apps and devices. It is explicitly not designed to be a version control system: for this purpose, real version control systems (Git etc) should be used to manage the documents. Most PUT requests unconditionally overwrite the current state of a resource.
+The API consists of two parts. **App API** works in the context of one app. The desktop tool puts Sway documents to the API, and clients can retrieve current values and assets.
+
+The goal of the app API is to let users test the values encoded in Sway documents on client apps and devices. It is explicitly not designed to be a version control system: for this purpose, real version control systems (Git etc) should be used to manage the documents. Most PUT requests unconditionally overwrite the current state of a resource.
+
+The other part of the API, **management API**, deals with creating new apps and seeing the associated metadata (authorized users, logs etc). The desktop tool uses this API to manage the apps.
 
 
 
@@ -14,9 +18,9 @@ Authentication is implemented with OAuth2 Bearer tokens as specified in [RFC6750
 
 There are two levels of access which correspond to two kinds of Bearer tokens: user tokens and document tokens.
 
-**User tokens** identify and authenticate a particular end user of Sway who has a user account on swy.io. You can obtain your user token on [swy.io/you](https://swy.io/you/). The user token provides full access to both Sway app API, as well as the app management API that lets the user enumerate and create new Sway apps. The user token should be used as authenticator in the Sway desktop tool.
+**User tokens** identify and authenticate a particular end user of Sway who has a user account on swy.io. You can obtain your user token on [swy.io/you](https://swy.io/you/). The user token provides full access to both app API and management API.
 
-**App tokens** are associated with one Sway app, and provide read-only access to requests regarding one app. App tokens should be used as authenticators in the Sway device libraries. You can obtain the app token from the page of the individual app.
+**App tokens** are associated with one Sway app, and provide read-only access to requests regarding one app using the app API. App tokens should be used as authenticators in the Sway device libraries. You can obtain the app token from the page of the individual app.
 
 Authentication examples:
 
@@ -210,18 +214,124 @@ Access level: user token
 
 Response
 
-* `200 OK.` List of apps for the user.
+* `200 OK.` List of apps for the user. Also contains the authorized users for each app, and the latest log entry.
 
-    [
+      [
+        {
+          "name": "My Awesome App",
+          "id": "53551a31e9cb4e000027f3f8",
+          "users": [
+            {
+              "id": "53551a31e9cb4e0000271234",
+              "name": "Bob Yerunkel",
+              "email": "bob@example.com"
+            },
+            {
+              "id": "53551a31e9cb4e0000274567",
+              "name": "Ally Gator",
+              "email": "ally@example.com"
+            }
+          ],
+          "latestLog": {
+            "app": {
+              "_id": "53551a31e9cb4e000027f3f8",
+              "name": "My Awesome App"
+            },
+            "user": {
+              "_id": "53551a31e9cb4e0000271234",
+              "email": "bob@example.com",
+              "name": "Bob Yerunkel"
+            },
+            "event": "userPutAppResource",
+            "resource": {
+              "theme": "default",
+              "name": "values.yaml"
+            },
+            "time": "2014-09-02T21:20:16.210Z",
+            "affectedUsers": []
+          }
+        },
+        {
+          "name": "Another Awesome App",
+          "id": "53551a31e9cb4e000027bee1",
+          "users": [
+            {
+              "id": "53551a31e9cb4e0000271234",
+              "name": "Bob Yerunkel",
+              "email": "bob@example.com"
+            },
+            {
+              "id": "53551a31e9cb4e0000274567",
+              "name": "Ally Gator",
+              "email": "ally@example.com"
+            }
+          ],  
+          "latestLog": {
+            "app": {
+              "_id": "53551a31e9cb4e000027bee1",
+              "name": "Another Awesome App"
+            },
+            "user": {
+              "_id": "53551a31e9cb4e0000274567",
+              "email": "ally@example.com",
+              "name": "Ally Gator"
+            },
+            "event": "userPutAppResource",
+            "resource": {
+              "theme": "default",
+              "name": "values.yaml"
+            },
+            "time": "2014-09-02T21:20:16.210Z",
+            "affectedUsers": []
+          }
+        }
+      ]
+
+### Metadata for one app
+
+    GET /v1/apps/53551a31e9cb4e000027f3f8
+
+Access level: user token
+
+Response
+
+* `200 OK.` Metadata for this app in JSON format (including creator, authorized users, and latest log entry).
+
       {
         "name": "My Awesome App",
-        "id": 53551a31e9cb4e000027f3f8
-      },
-      {
-        "name": "Another Awesome App",
-        "id": 53551a31e9cb4e000027bee1
+        "id": "53551a31e9cb4e000027f3f8",
+        "users": [
+          {
+            "id": "53551a31e9cb4e0000271234",
+            "name": "Bob Yerunkel",
+            "email": "bob@example.com"
+          },
+          {
+            "id": "53551a31e9cb4e0000274567",
+            "name": "Ally Gator",
+            "email": "ally@example.com"
+          }
+        ],
+        "latestLog": {
+          "app": {
+            "_id": "53551a31e9cb4e000027f3f8",
+            "name": "My Awesome App"
+          },
+          "user": {
+            "_id": "53551a31e9cb4e0000271234",
+            "email": "bob@example.com",
+            "name": "Bob Yerunkel"
+          },
+          "event": "userPutAppResource",
+          "resource": {
+            "theme": "default",
+            "name": "values.yaml"
+          },
+          "time": "2014-09-02T21:20:16.210Z",
+          "affectedUsers": []
+        }
       }
-    ]
+
 
 ### Create an app
 
