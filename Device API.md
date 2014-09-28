@@ -16,14 +16,14 @@ Response:
 		{
 			device_name: "John Appleseed’s iPhone - My App",
 			device_guid: "8746A183-6470-496C-8F62-45396A13B353",
-			app_id: "12345"
+			project_id: "12345"
 		}
 
 `device_name`: a string that helps the user to identify the running app. This could be a combination of device name and app name.
 
 `device_guid`: A stable identifier that is unique for the combination of this device, app, and Sway. The Sway library generates a unique persistent identifier that remains stable every time the app is run.
 
-`app_id`: this app’s Sway identifier.
+`project_id`: this project’s Sway identifier.
 
 
 
@@ -98,7 +98,7 @@ Response: the PNG image
 
 ## Sway device talkback API
 
-Whereas the device API is implemented on the device side, the device talkback API is implemented in the Sway tool. Apps implementing Sway can talk back to the desktop editor app with the talkback API. They discover the tool endpoint URL with the device API device_session_start call when the tool informs the device about its presence and communicates the device talkback URL to the device.
+Whereas the device API is implemented on the device side, the device talkback API is implemented in the Sway tool. Apps implementing Sway can talk back to the Sway tool with the talkback API. They discover the tool endpoint URL with the device API device_session_start call when the tool informs the device about its presence and communicates the device talkback URL to the device.
 
 Request: `PUT /v1/device_talkback`
 
@@ -107,7 +107,7 @@ Request JSON body:
 		[{
 			time: 1231233128,
 			device_guid: guid,
-			app_id: app_id,
+			project_id: project_id,
 			object: objectClass,
 			parameter: objectParameterName,
 			parameter_type: type,

@@ -2,11 +2,11 @@
 
 This is the API implemented by Sway cloud service, with API endpoints running at `https://swy.io/v1/`.
 
-The API consists of two parts. **App API** works in the context of one app. The desktop tool puts Sway documents to the API, and clients can retrieve current values and assets.
+The API consists of two parts. **Project API** works in the context of one project. The desktop tool puts Sway documents to the API, and clients can retrieve current values and assets.
 
-The goal of the app API is to let users test the values encoded in Sway documents on client apps and devices. It is explicitly not designed to be a version control system: for this purpose, real version control systems (Git etc) should be used to manage the documents. Most PUT requests unconditionally overwrite the current state of a resource.
+The goal of the project API is to let users test the values encoded in Sway documents on client apps and devices. It is explicitly not designed to be a version control system: for this purpose, real version control systems (Git etc) should be used to manage the documents. Most PUT requests unconditionally overwrite the current state of a resource.
 
-The other part of the API, **management API**, deals with creating new apps and seeing the associated metadata (authorized users, logs etc). The desktop tool uses this API to manage the apps.
+The other part of the API, **management API**, deals with creating new projects and seeing the associated metadata (authorized users, logs etc). The desktop tool uses this API to manage the projects.
 
 
 
@@ -18,23 +18,23 @@ Authentication is implemented with OAuth2 Bearer tokens as specified in [RFC6750
 
 There are two levels of access which correspond to two kinds of Bearer tokens: user tokens and document tokens.
 
-**User tokens** identify and authenticate a particular end user of Sway who has a user account on swy.io. You can obtain your user token on [swy.io/you](https://swy.io/you/). The user token provides full access to both app API and management API.
+**User tokens** identify and authenticate a particular end user of Sway who has a user account on swy.io. You can obtain your user token on [swy.io/you](https://swy.io/you/). The user token provides full access to both project API and management API.
 
-**App tokens** are associated with one Sway app, and provide read-only access to requests regarding one app using the app API. App tokens should be used as authenticators in the Sway device libraries. You can obtain the app token from the page of the individual app.
+**Project tokens** are associated with one Sway project, and provide read-only access to requests regarding one project using the project API. Project tokens should be used as authenticators in the Sway device libraries. You can obtain the project token from the page of the individual project.
 
 Authentication examples:
 
 #### Request
 
-    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest?access_token=4T%2BwCx3LXFNdCEsPAgRFZtleO30tX0xeR4O0BlrNZx4%3D
+    GET /v1/projects/53551a31e9cb4e000027f3f8/manifest?access_token=4T%2BwCx3LXFNdCEsPAgRFZtleO30tX0xeR4O0BlrNZx4%3D
 
-    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest
+    GET /v1/projects/53551a31e9cb4e000027f3f8/manifest
     Authorization: Bearer 4T+wCx3LXFNdCEsPAgRFZtleO30tX0xeR4O0BlrNZx4=
 
 #### Response
 
  * `400 Bad Request` The request was malformed, e.g the token was specified both as the header and parameter.
- * `401 Unauthorized` The request was valid, but this token does not authorize a user to access this app.
+ * `401 Unauthorized` The request was valid, but this token does not authorize a user to access this project.
  * If the authorization is valid, see individual API endpoints for possible responses.
 
 
@@ -56,7 +56,7 @@ If a response to a given request is an error (anything other than HTTP 200 or 30
 The current state of many resources in the Sway system is indicated by a base64-encoded hash of its contents, such as seen in the manifest file. You should use this hash as an ETag of your requests for this resource, to cut down unnecessary traffic.
 
 
-## App API
+## Project API
 
 ### Manifest
 
@@ -66,22 +66,22 @@ The manifest is a key resource of each Sway document, containing metadata as wel
 
 #### Get manifest
 
-    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest
+    GET /v1/projects/53551a31e9cb4e000027f3f8/manifest
 
-Access level: user token or app token
+Access level: user token or project token
 
 Response:
 
  * `404 Not Found.` This document was not found.
  * `304 Not Modified.` An ETag was included in the request, and the manifest on the server has the same ETag, i.e the client already has the current version.
- * `204 No Content.` No manifest has yet been uploaded for this app.
+ * `204 No Content.` No manifest has yet been uploaded for this project.
  * `200 OK.` Everything is fine with the manifest. The document body contains the manifest content in YAML format, verbatim as it was previously uploaded. The content type is application/x-yaml.
 
 
 
 #### Put manifest
 
-    PUT /v1/apps/53551a31e9cb4e000027f3f8/manifest
+    PUT /v1/projects/53551a31e9cb4e000027f3f8/manifest
     Content-type: application/x-yaml
 
 Access level: user token
@@ -99,9 +99,9 @@ Response:
 
 It is possible that a manifest file has been uploaded to the server, but some of the referred resources are missing. The client can ask the server any time what resources it is missing.
 
-    GET /v1/apps/53551a31e9cb4e000027f3f8/manifest/missing_resources
+    GET /v1/projects/53551a31e9cb4e000027f3f8/manifest/missing_resources
 
-Access level: user token or app token
+Access level: user token or project token
 
 Response:
 
@@ -135,9 +135,9 @@ These simple endpoints let you get or put the aliases content.
 
 #### Get aliases
 
-    GET /v1/apps/53551a31e9cb4e000027f3f8/aliases
+    GET /v1/projects/53551a31e9cb4e000027f3f8/aliases
 
-Access level: user token or app token
+Access level: user token or project token
 
 Response:
 
@@ -149,7 +149,7 @@ Response:
 
 #### Put aliases
 
-    PUT /v1/apps/53551a31e9cb4e000027f3f8/manifest
+    PUT /v1/projects/53551a31e9cb4e000027f3f8/manifest
     Content-type: application/x-yaml
 
 Access level: user token
@@ -171,7 +171,7 @@ These are the values.yaml files of each theme contained in the document, and in 
 
 Note how the theme and resource file name are simply part of the URL.
 
-    PUT /v1/apps/53551a31e9cb4e000027f3f8/resources/default/values.yaml
+    PUT /v1/projects/53551a31e9cb4e000027f3f8/resources/default/values.yaml
 
 Access level: user token
 
@@ -180,41 +180,41 @@ Request body is the content of the resource.
 Response:
 
   * `200 OK.` The resource was successfully put. The `ETag` header also contains the resource ETag.
-  * `404 Not Found.` The application was not found.
-  * `409 Conflict.` Either there is no manifest for this app, or the manifest does not contain a reference to this resource. Sway requires that all uploaded resources are referred to in the manifest. This probably means that you are trying to upload a resource before uploading an up-to-date manifest. See the `error` object in the body for details.
+  * `404 Not Found.` The project was not found.
+  * `409 Conflict.` Either there is no manifest for this project, or the manifest does not contain a reference to this resource. Sway requires that all uploaded resources are referred to in the manifest. This probably means that you are trying to upload a resource before uploading an up-to-date manifest. See the `error` object in the body for details.
 
 #### Get resource
 
 Whenever possible, include an If-None-Match header in the request, to cut down unnecessary traffic: if you already have the same version of the resource as is on the server, `304 Not Modified` is returned.
 
-    GET /v1/apps/53551a31e9cb4e000027f3f8/resources/default/values.yaml
+    GET /v1/projects/53551a31e9cb4e000027f3f8/resources/default/values.yaml
     If-None-Match: VWUpRQ0GDLcorRT+a0wJsB1o0OU2M8CQeUSjmLAwvgg=
 
-Access level: user token or app token
+Access level: user token or project token
 
 Response
 
  * `200 OK.` The resource was retrieved successfully, the body contains the resource content.
  * `304 Not Modified.` The resource representation on the server is the same as specified by the ETag, i.e the server and client both have the same resource and it does not need to be transmitted.
- * `404 Not Found.` The resource or application was not found.
+ * `404 Not Found.` The resource or project was not found.
 
 
 
-## App management API
+## Project management API
 
-You use the app management API to retrieve the list of apps for a given user, create new ones, and retrieve and change metadata regarding an app, such as the app name or list of authorized users.
+You use the project management API to retrieve the list of projects for a given user, create new ones, and retrieve and change metadata regarding a project, such as the project name or list of authorized users.
 
-Deleting an app is currently not supported in the management API. You must use the Sway web app for this.
+Deleting a project is currently not supported in the management API. You must use the Sway web UI for this.
 
-### Get apps
+### Get projects
 
-    GET /v1/apps
+    GET /v1/projects
 
 Access level: user token
 
 Response
 
-* `200 OK.` List of apps for the user. Also contains the authorized users for each app, and the latest log entry.
+* `200 OK.` List of projects for the user. Also contains the authorized users for each project, and the latest log entry.
 
       [
         {
@@ -233,7 +233,7 @@ Response
             }
           ],
           "latestLog": {
-            "app": {
+            "project": {
               "_id": "53551a31e9cb4e000027f3f8",
               "name": "My Awesome App"
             },
@@ -242,7 +242,7 @@ Response
               "email": "bob@example.com",
               "name": "Bob Yerunkel"
             },
-            "event": "userPutAppResource",
+            "event": "userPutProjectResource",
             "resource": {
               "theme": "default",
               "name": "values.yaml"
@@ -267,7 +267,7 @@ Response
             }
           ],  
           "latestLog": {
-            "app": {
+            "project": {
               "_id": "53551a31e9cb4e000027bee1",
               "name": "Another Awesome App"
             },
@@ -276,7 +276,7 @@ Response
               "email": "ally@example.com",
               "name": "Ally Gator"
             },
-            "event": "userPutAppResource",
+            "event": "userPutProjectResource",
             "resource": {
               "theme": "default",
               "name": "values.yaml"
@@ -287,15 +287,15 @@ Response
         }
       ]
 
-### Metadata for one app
+### Metadata for one project
 
-    GET /v1/apps/53551a31e9cb4e000027f3f8
+    GET /v1/projects/53551a31e9cb4e000027f3f8
 
 Access level: user token
 
 Response
 
-* `200 OK.` Metadata for this app in JSON format (including creator, authorized users, and latest log entry).
+* `200 OK.` Metadata for this project in JSON format (including creator, authorized users, and latest log entry).
 
       {
         "name": "My Awesome App",
@@ -313,16 +313,16 @@ Response
           }
         ],
         "latestLog": {
-          "app": {
+          "project": {
             "_id": "53551a31e9cb4e000027f3f8",
-            "name": "My Awesome App"
+            "name": "My Awesome Project"
           },
           "user": {
             "_id": "53551a31e9cb4e0000271234",
             "email": "bob@example.com",
             "name": "Bob Yerunkel"
           },
-          "event": "userPutAppResource",
+          "event": "userPutProjectResource",
           "resource": {
             "theme": "default",
             "name": "values.yaml"
@@ -333,13 +333,13 @@ Response
       }
 
 
-### Create an app
+### Create a project
 
-    POST /v1/apps
+    POST /v1/projects
 
 Access level: user token
 
-Request body should contain the name of the app encoded in JSON.
+Request body should contain the project name encoded in JSON.
 
     {
       "name": "Great App"
@@ -347,11 +347,11 @@ Request body should contain the name of the app encoded in JSON.
 
 Response
 
-* `200 OK.` The app was created. The response contains the app name and ID.
+* `200 OK.` The project was created. The response contains the project name and ID.
 
     {
       "name": "Great App",
       "id": 53551a31e9cb4e000027abcd
     }
 
-* `400 Bad Request`. The app could not be created for some reason, e.g no name was supplied. The error response contains more details.
+* `400 Bad Request`. The project could not be created for some reason, e.g no name was supplied. The error response contains more details.

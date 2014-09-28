@@ -1,6 +1,6 @@
 # Sway document format
 
-The Sway document is a collection of values and resources relating to one app whose values are managed with Sway.
+The Sway document is a collection of values and resources relating to one project whose values are managed with Sway.
 
 On the editing side, the tool edits the values in this document.
 
@@ -57,7 +57,7 @@ The manifest file specifies metadata about the document, as well as list of the 
 An example manifest.yaml file:
 
     format: 1
-    app_identifier: 5363a960e914803c292bbd4b
+    project_identifier: 5363a960e914803c292bbd4b
     aliases.yaml: 7ghj4FKr7U8CKUUGvSkrlS71ahtu3cD2lNy7f34f=
     resources:
       default:
@@ -67,7 +67,7 @@ An example manifest.yaml file:
 
 `format` defines the Sway document version. Currently, only version 1 is defined.
 
-`app_identifier` is the token to be used to identify the app in the Sway cloud service.
+`project_identifier` is the token to be used to identify the project in the Sway cloud service.
 
 `resources` is a representation of each theme folder together with the resources it contains. Each resource is listed with the checksum of its contents calculated over the resource’s bytestream using SHA256-base64.
 
