@@ -14,16 +14,19 @@ Request: `GET /v1/device_info`
 Response:
 
 		{
-			device_name: "John Appleseed’s iPhone - My App",
+			device_name: "John Appleseed’s iPhone",
 			device_guid: "8746A183-6470-496C-8F62-45396A13B353",
-			project_id: "12345"
+			project_id: "12345",
+			project_name: "com.example.myGreatApp"
 		}
 
-`device_name`: a string that helps the user to identify the running app. This could be a combination of device name and app name.
+`device_name`: a string that helps the user to identify the device that the app is running on. This could be a combination of device name and app name.
 
 `device_guid`: A stable identifier that is unique for the combination of this device, app, and Sway. The Sway library generates a unique persistent identifier that remains stable every time the app is run.
 
 `project_id`: this project’s Sway identifier.
+
+`project_name`: this project’s bundle name or some other kind of name that helps the user to identify the project.
 
 
 
