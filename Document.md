@@ -1,12 +1,12 @@
-# Sway document format
+# Hone document format
 
-The Sway document is a collection of values and resources relating to one project whose values are managed with Sway.
+The Hone document is a collection of values and resources relating to one project whose values are managed with Hone.
 
 On the editing side, the tool edits the values in this document.
 
 On the device side, the document is typically bundled in the app, and the library loads values from this bundled document.
 
-The job of Sway cloud service is, among other things, to efficiently get the document from the tool to devices.
+The job of Hone cloud service is, among other things, to efficiently get the document from the tool to devices.
 
 
 
@@ -23,9 +23,9 @@ The job of Sway cloud service is, among other things, to efficiently get the doc
 
 ## Container
 
-A Sway document is a folder container with .sway extension. This is the package bundle document that the Sway tool works with. On the file system and version control level, though, it is just a folder with specified format and contents.
+A Hone document is a folder container with .hone extension. This is the package bundle document that the Hone tool works with. On the file system and version control level, though, it is just a folder with specified format and contents.
 
-A minimal Sway container layout is as follows:
+A minimal Hone container layout is as follows:
 
     manifest.yaml
     default/
@@ -65,9 +65,9 @@ An example manifest.yaml file:
       lightTheme:
         values.yaml: fSDObOmAC1XzreIzoOSAJfo6ueg0OkuoHsmaT/HSgwI=
 
-`format` defines the Sway document version. Currently, only version 1 is defined.
+`format` defines the Hone document version. Currently, only version 1 is defined.
 
-`project_identifier` is the token to be used to identify the project in the Sway cloud service.
+`project_identifier` is the token to be used to identify the project in the Hone cloud service.
 
 `resources` is a representation of each theme folder together with the resources it contains. Each resource is listed with the checksum of its contents calculated over the resource’s bytestream using SHA256-base64.
 
@@ -81,7 +81,7 @@ The “default” theme must always be present. It must contain all values and a
 
 The values file specifies the objects, keys and values specified by one theme. It has a two-level namespace, with a dictionary of document objects, and each object containing a dictionary keys and values.
 
-Standard YAML serialization does not guarantee preserving the ordering of dictionary keys across invocations. The Sway document loader/saver uses a modified serializer that treats the top-level objects, and the list of values in each object, as arrays and preserves their ordering across saves.
+Standard YAML serialization does not guarantee preserving the ordering of dictionary keys across invocations. The Hone document loader/saver uses a modified serializer that treats the top-level objects, and the list of values in each object, as arrays and preserves their ordering across saves.
 
 An example values.yaml file:
 
@@ -99,11 +99,11 @@ This document contains two top-level objects, “CollectionEntries” and “Bac
 
 The top-level object keys are just names that are relevant to the application being developed. In object-oriented architecture, they might be the same as class names, or they might use another naming scheme if values from a given category are used by more than one object.
 
-The key names within one object should reflect the item in the application that the key represents. Typically, this would be “top_margin”, “left_padding”, “title”, “background” etc. The key names are suffixed by the Sway data type, separated by ~ (tilde), so the final key name in the document might be “top_margin~float”, to represent the top margin of a given object as a floating-point value.
+The key names within one object should reflect the item in the application that the key represents. Typically, this would be “top_margin”, “left_padding”, “title”, “background” etc. The key names are suffixed by the Hone data type, separated by ~ (tilde), so the final key name in the document might be “top_margin~float”, to represent the top margin of a given object as a floating-point value.
 
 The top-level object names must be unique. The value names must be unique within each object. For example, there may not be two objects called `container`. One `container` object may not have two values called `background`. However, there may be values called `background1` and `background2` in `container`. If there are objects `container` and `item`, both of them may have a value called `background`.
 
-The following data types are defined in Sway document format v1.
+The following data types are defined in Hone document format v1.
 
 ### bool
 
@@ -158,7 +158,7 @@ An array of RGBA values in device RGB color space, all expressed as float values
 
 ## aliases.yaml
 
-This file defines “aliases”, or “nice names”, for objects and values. The goal of aliases is to provide friendlier names to these items. The original object and value names are defined by the engineer in code and cannot be easily changed, but the engineer-defined names may not be the most meaningful to the non-technical Sway tool users. The aliases helps to bridge this gap by letting the tool users easily rename the items to something more meaningful.
+This file defines “aliases”, or “nice names”, for objects and values. The goal of aliases is to provide friendlier names to these items. The original object and value names are defined by the engineer in code and cannot be easily changed, but the engineer-defined names may not be the most meaningful to the non-technical Hone tool users. The aliases helps to bridge this gap by letting the tool users easily rename the items to something more meaningful.
 
 Using aliases is completely optional. Only some, or all, or no objects and values can have aliases defined. If there are no aliases defined, the `aliases.yaml` file, and the corresponding entry in the document’s `manifest.yaml` may not exist.
 

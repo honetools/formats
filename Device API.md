@@ -1,8 +1,8 @@
-# Sway device API
+# Hone device API
 
-The Sway tool discovers compatible apps devices over Bonjour, looking for “_sway._tcp” service type. It then uses the protocol to get info about the apps running on devices, and to set the parameter values. Devices that implement the protocol below are compliant with this service type and may advertise themselves as such. This protocol is fully implemented by the official Sway libraries for iOS and OS X that you include in your app.
+The Hone tool discovers compatible apps devices over Bonjour, looking for “_hone._tcp” service type. It then uses the protocol to get info about the apps running on devices, and to set the parameter values. Devices that implement the protocol below are compliant with this service type and may advertise themselves as such. This protocol is fully implemented by the official Hone libraries for iOS and OS X that you include in your app.
 
-The Sway protocol consists of a few implemented HTTP endpoints.
+The Hone protocol consists of a few implemented HTTP endpoints.
 
 
 ### Device info
@@ -22,9 +22,9 @@ Response:
 
 `device_name`: a string that helps the user to identify the device that the app is running on. This could be a combination of device name and app name.
 
-`device_guid`: A stable identifier that is unique for the combination of this device, app, and Sway. The Sway library generates a unique persistent identifier that remains stable every time the app is run.
+`device_guid`: A stable identifier that is unique for the combination of this device, app, and Hone. The Hone library generates a unique persistent identifier that remains stable every time the app is run.
 
-`project_id`: this project’s Sway identifier.
+`project_id`: this project’s Hone identifier.
 
 `project_name`: this project’s bundle name or some other kind of name that helps the user to identify the project.
 
@@ -32,7 +32,7 @@ Response:
 
 ### Device session start
 
-The Sway tool uses the device_session_start call to inform the device about its presence, and give the app the talkback URL that the app may use to send info to the tool using the Sway device talkback protocol.
+The Hone tool uses the device_session_start call to inform the device about its presence, and give the app the talkback URL that the app may use to send info to the tool using the Hone device talkback protocol.
 
 The device responds with the same info as device_info call.
 
@@ -50,7 +50,7 @@ Response: same as device_info above
 
 ### Object tree
 
-Returns a tree of Sway objects and parameter values that is known to the app. The data structure is the same as in Sway documents, but represented as JSON instead of YAML.
+Returns a tree of Hone objects and parameter values that is known to the app. The data structure is the same as in Hone documents, but represented as JSON instead of YAML.
 
 Request: `GET /v1/objects`
 
@@ -99,9 +99,9 @@ Response: the PNG image
 
 
 
-## Sway device talkback API
+## Hone device talkback API
 
-Whereas the device API is implemented on the device side, the device talkback API is implemented in the Sway tool. Apps implementing Sway can talk back to the Sway tool with the talkback API. They discover the tool endpoint URL with the device API device_session_start call when the tool informs the device about its presence and communicates the device talkback URL to the device.
+Whereas the device API is implemented on the device side, the device talkback API is implemented in the Hone tool. Apps implementing Hone can talk back to the Hone tool with the talkback API. They discover the tool endpoint URL with the device API device_session_start call when the tool informs the device about its presence and communicates the device talkback URL to the device.
 
 Request: `PUT /v1/device_talkback`
 

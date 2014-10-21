@@ -1,10 +1,10 @@
-# Sway cloud service API
+# Hone cloud service API
 
-This is the API implemented by Sway cloud service, with API endpoints running at `https://swy.io/v1/`.
+This is the API implemented by Hone cloud service, with API endpoints running at `https://hone.tools/v1/`.
 
-The API consists of two parts. **Project API** works in the context of one project. The desktop tool puts Sway documents to the API, and clients can retrieve current values and assets.
+The API consists of two parts. **Project API** works in the context of one project. The desktop tool puts Hone documents to the API, and clients can retrieve current values and assets.
 
-The goal of the project API is to let users test the values encoded in Sway documents on client apps and devices. It is explicitly not designed to be a version control system: for this purpose, real version control systems (Git etc) should be used to manage the documents. Most PUT requests unconditionally overwrite the current state of a resource.
+The goal of the project API is to let users test the values encoded in Hone documents on client apps and devices. It is explicitly not designed to be a version control system: for this purpose, real version control systems (Git etc) should be used to manage the documents. Most PUT requests unconditionally overwrite the current state of a resource.
 
 The other part of the API, **management API**, deals with creating new projects and seeing the associated metadata (authorized users, logs etc). The desktop tool uses this API to manage the projects.
 
@@ -18,9 +18,9 @@ Authentication is implemented with OAuth2 Bearer tokens as specified in [RFC6750
 
 There are two levels of access which correspond to two kinds of Bearer tokens: user tokens and document tokens.
 
-**User tokens** identify and authenticate a particular end user of Sway who has a user account on swy.io. You can obtain your user token on [swy.io/you](https://swy.io/you/). The user token provides full access to both project API and management API.
+**User tokens** identify and authenticate a particular end user of Hone who has a user account on hone.tools. You can obtain your user token on [hone.tools/you](https://hone.tools/you/). The user token provides full access to both project API and management API.
 
-**Project tokens** are associated with one Sway project, and provide read-only access to requests regarding one project using the project API. Project tokens should be used as authenticators in the Sway device libraries. You can obtain the project token from the page of the individual project.
+**Project tokens** are associated with one Hone project, and provide read-only access to requests regarding one project using the project API. Project tokens should be used as authenticators in the Hone device libraries. You can obtain the project token from the page of the individual project.
 
 Authentication examples:
 
@@ -53,14 +53,14 @@ If a response to a given request is an error (anything other than HTTP 200 or 30
 
 ### Caching and ETags
 
-The current state of many resources in the Sway system is indicated by a base64-encoded hash of its contents, such as seen in the manifest file. You should use this hash as an ETag of your requests for this resource, to cut down unnecessary traffic.
+The current state of many resources in the Hone system is indicated by a base64-encoded hash of its contents, such as seen in the manifest file. You should use this hash as an ETag of your requests for this resource, to cut down unnecessary traffic.
 
 
 ## Project API
 
 ### Manifest
 
-The manifest is a key resource of each Sway document, containing metadata as well as a listing of other resources and their checksums. A complete representation of a Sway document can be obtained by first retrieving the manifest, and then the resources that it refers to.
+The manifest is a key resource of each Hone document, containing metadata as well as a listing of other resources and their checksums. A complete representation of a Hone document can be obtained by first retrieving the manifest, and then the resources that it refers to.
 
 
 
@@ -129,7 +129,7 @@ If a reference to `aliases.yaml` is present in the manifest, but the aliases fil
 
 ### Aliases
 
-The optional aliases.yaml file defines object and value name aliases that, unlike the original object and value names, can be modified by the end user at any time using the Sway editor tool. See the [document format](Document.md) for more details about aliases.
+The optional aliases.yaml file defines object and value name aliases that, unlike the original object and value names, can be modified by the end user at any time using the Hone editor tool. See the [document format](Document.md) for more details about aliases.
 
 These simple endpoints let you get or put the aliases content.
 
@@ -181,7 +181,7 @@ Response:
 
   * `200 OK.` The resource was successfully put. The `ETag` header also contains the resource ETag.
   * `404 Not Found.` The project was not found.
-  * `409 Conflict.` Either there is no manifest for this project, or the manifest does not contain a reference to this resource. Sway requires that all uploaded resources are referred to in the manifest. This probably means that you are trying to upload a resource before uploading an up-to-date manifest. See the `error` object in the body for details.
+  * `409 Conflict.` Either there is no manifest for this project, or the manifest does not contain a reference to this resource. Hone requires that all uploaded resources are referred to in the manifest. This probably means that you are trying to upload a resource before uploading an up-to-date manifest. See the `error` object in the body for details.
 
 #### Get resource
 
@@ -204,7 +204,7 @@ Response
 
 You use the project management API to retrieve the list of projects for a given user, create new ones, and retrieve and change metadata regarding a project, such as the project name or list of authorized users.
 
-Deleting a project is currently not supported in the management API. You must use the Sway web UI for this.
+Deleting a project is currently not supported in the management API. You must use the Hone web UI for this.
 
 ### Get projects
 
