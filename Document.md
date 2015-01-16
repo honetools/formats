@@ -164,11 +164,11 @@ Using aliases is completely optional. Only some, or all, or no objects and value
 
 An example aliases file:
 
-container:
-  alias: Widgets
-  values:
-    background: "Background color"
-    borderStroke: "Border width"
+    container:
+      alias: Widgets
+      values:
+        background: "Background color"
+        borderStroke: "Border width"
 
 The top-level keys are same objects that are defined in `values.yaml`. If the object itself has an alias, it is under the `alias` key. If any of the object’s values have aliases, these are defined in the `values` dictionary.
 
