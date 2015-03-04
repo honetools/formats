@@ -158,21 +158,30 @@ An array of RGBA values in device RGB color space, all expressed as float values
 
 ## aliases.yaml
 
-This file defines “aliases”, or “nice names”, for objects and values. The goal of aliases is to provide friendlier names to these items. The original object and value names are defined by the engineer in code and cannot be easily changed, but the engineer-defined names may not be the most meaningful to the non-technical Hone tool users. The aliases helps to bridge this gap by letting the tool users easily rename the items to something more meaningful.
+This file defines “aliases”, or “nice names”, for themes, objects and values. The goal of aliases is to provide friendlier names to these items. The original object and value names are defined by the engineer in code and cannot be easily changed, but the engineer-defined names may not be the most meaningful to the non-technical Hone tool users. The aliases helps to bridge this gap by letting the tool users easily rename the items to something more meaningful.
 
-Using aliases is completely optional. Only some, or all, or no objects and values can have aliases defined. If there are no aliases defined, the `aliases.yaml` file, and the corresponding entry in the document’s `manifest.yaml` may not exist.
+Using aliases is completely optional. Only some, or all, or no themes, objects and values can have aliases defined. If there are no aliases defined, the `aliases.yaml` file, and the corresponding entry in the document’s `manifest.yaml` may not exist.
 
 An example aliases file:
 
-    container:
-      alias: Widgets
-      values:
-        background: "Background color"
-        borderStroke: "Border width"
+    themes:
+      default:
+        alias: Theme 1
+    objects:
+      container:
+        alias: Widgets
+        values:
+          background: "Background color"
+          borderStroke: "Border width"
 
-The top-level keys are same objects that are defined in `values.yaml`. If the object itself has an alias, it is under the `alias` key. If any of the object’s values have aliases, these are defined in the `values` dictionary.
+The top-level keys are “objects” and “themes”.
+
+“objects” contains the same objects that are defined in `values.yaml`. If the object itself has an alias, it is under the `alias` key. If any of the object’s values have aliases, these are defined in the `values` dictionary.
+
+“themes” contains the themes defined in the document. At the very least, it contains a “default” theme since one is always present in all Hone documents. Initially, the default theme’s alias is “Theme 1” but the user can rename it. All additional theme aliases will also be listed here if the user has created more themes and has renamed them.
 
 The naming rules for aliases are the same as in `values.yaml`:
 
+* Theme aliases must not be the same as alias or real name of any other theme.
 * Object aliases must be unique and must not be the same as alias or real name of any other object.
 * Value aliases must be unique within the same object and must not be the same as alias or real name of any other value within the same object.
