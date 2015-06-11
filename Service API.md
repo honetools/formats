@@ -214,7 +214,7 @@ Access level: user token
 
 Response
 
-* `200 OK.` List of projects for the user. Also contains the authorized users for each project, and the latest log entry.
+`200 OK.` List of projects for the user. Also contains the authorized users for each project, and the latest log entry.
 
       [
         {
@@ -295,7 +295,7 @@ Access level: user token
 
 Response
 
-* `200 OK.` Metadata for this project in JSON format (including creator, authorized users, and latest log entry).
+`200 OK.` Metadata for this project in JSON format (including creator, authorized users, and latest log entry).
 
       {
         "name": "My Awesome App",
@@ -347,11 +347,11 @@ Request body should contain the project name encoded in JSON.
 
 Response
 
-* `200 OK.` The project was created. The response contains the project name and ID.
+`200 OK.` The project was created. The response contains the project name and ID.
 
     {
       "name": "Great App",
       "id": 53551a31e9cb4e000027abcd
     }
 
-* `400 Bad Request`. The project could not be created for some reason, e.g no name was supplied. The error response contains more details.
+`400 Bad Request`. The project could not be created for some reason, e.g no name was supplied. The error response contains more details.
