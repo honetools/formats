@@ -98,6 +98,57 @@ Request: `GET /v1/png_representation`
 Response: the PNG image
 
 
+### Device fonts
+
+The tool can request the list of fonts available on the device in the context of the running application. It is assumed that text can be rendered using any of those fonts. The list is an array of font family dictionaries, where each dictionary contains a key of the family name, and a value of the family member fonts as an array.
+
+Request: `GET /v1/fonts`
+
+Response JSON body:
+
+		[
+		    {
+		        "American Typewriter": [
+		            "AmericanTypewriter",
+		            "AmericanTypewriter-Light",
+		            "AmericanTypewriter-Bold",
+		            "AmericanTypewriter-Condensed",
+		            "AmericanTypewriter-CondensedLight",
+		            "AmericanTypewriter-CondensedBold"
+		        ]
+		    },
+		    {
+		        "Andale Mono": [
+		            "AndaleMono"
+		        ]
+		    },
+		    {
+		        "Anonymous Pro": [
+		            "AnonymousPro",
+		            "AnonymousPro-Italic",
+		            "AnonymousPro-Bold",
+		            "AnonymousPro-BoldItalic"
+		        ]
+		    },
+		    {
+		        "Arial": [
+		            "ArialMT",
+		            "Arial-ItalicMT",
+		            "Arial-BoldMT",
+		            "Arial-BoldItalicMT"
+		        ]
+		    },
+		    {
+		        "Arial Narrow": [
+		            "ArialNarrow",
+		            "ArialNarrow-Italic",
+		            "ArialNarrow-Bold",
+		            "ArialNarrow-BoldItalic"
+		        ]
+		    }
+		]
+
+
 
 ## Hone device talkback API
 
