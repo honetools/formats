@@ -220,6 +220,8 @@ Response
         {
           "name": "My Awesome App",
           "id": "53551a31e9cb4e000027f3f8",
+          "vcs": "github",
+          "vcsUrl": "https://github.com/someone/exampleProject"
           "users": [
             {
               "id": "53551a31e9cb4e0000271234",
@@ -300,6 +302,8 @@ Response
       {
         "name": "My Awesome App",
         "id": "53551a31e9cb4e000027f3f8",
+        "vcs": "github",
+        "vcsUrl": "https://github.com/someone/exampleProject"
         "users": [
           {
             "id": "53551a31e9cb4e0000271234",
@@ -341,17 +345,25 @@ Access level: user token
 
 Request body should contain the project name encoded in JSON.
 
-    {
-      "name": "Great App"
-    }
+{
+  "name": "Great App"
+}
+
+Optionally, there may be a `vcsUrl` specified, pointing to a valid Github repository URL.
+
+{
+  "name": "Great App",
+  "vcsUrl": "https://github.com/someone/exampleProject"
+}
+
 
 Response
 
-`200 OK.` The project was created. The response contains the project name and ID.
+`200 OK.` The project was created. The response contains the project name, ID and other metadata.
 
     {
       "name": "Great App",
-      "id": 53551a31e9cb4e000027abcd
+      "id": 53551a31e9cb4e000027abcd,
     }
 
-`400 Bad Request`. The project could not be created for some reason, e.g no name was supplied. The error response contains more details.
+`400 Bad Request`. The project could not be created for some reason, e.g no name was supplied, or vcsUrl was supplied but was invalid. The error response contains more details.
