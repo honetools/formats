@@ -84,7 +84,6 @@ Request body:
 		},
 		{
 			"parameter~string": "hello"
-		}
 		}]
 
 
