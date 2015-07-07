@@ -355,3 +355,14 @@ Response
     }
 
 * `400 Bad Request`. The project could not be created for some reason, e.g no name was supplied. The error response contains more details.
+
+
+### Delete a project
+
+    DELETE /v1/projects/53551a31e9cb4e000027f3f8
+
+Access level: user token
+
+Response
+
+* `200 OK.` The project was deleted.
