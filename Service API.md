@@ -345,16 +345,16 @@ Access level: user token
 
 Request body should contain the project name encoded in JSON.
 
-{
-  "name": "Great App"
-}
+    {
+      "name": "Great App"
+    }
 
 Optionally, there may be a `vcsUrl` specified, pointing to a valid Github repository URL.
 
-{
-  "name": "Great App",
-  "vcsUrl": "https://github.com/someone/exampleProject"
-}
+    {
+      "name": "Great App",
+      "vcsUrl": "https://github.com/someone/exampleProject"
+    }
 
 
 Response
