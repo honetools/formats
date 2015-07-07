@@ -95,7 +95,7 @@ An example values.yaml file:
     BackButton:
       leftPadding~float: 24.0
 
-This document contains two top-level objects, “CollectionEntries” and “BackButton”. “Items” contains a background color, a top margin, an item count, and a font. “BackButton” contains left padding.
+This document contains two top-level objects, “CollectionEntries” and “BackButton”. “CollectionEntries” contains a background color, a top margin, an item count, and a font. “BackButton” contains left padding.
 
 The top-level object keys are just names that are relevant to the application being developed. In object-oriented architecture, they might be the same as class names, or they might use another naming scheme if values from a given category are used by more than one object.
 
