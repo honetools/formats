@@ -89,7 +89,7 @@ Access level: user token
 Response:
 
  * `200 OK.` All good, current version of the manifest was put. Additionally, the body contains the resources that the server is missing, similarly as missing_resources response. Response content type is application/json. The header also contains ETag for the manifest.
- * `400 Bad Request.` The document was possibly malformed. The JSON error body contains more information. Response content type is application/json.
+ * `400 Bad Request.` The document was possibly malformed, or has an error in the content (e.g the manifest project ID does not match actual project ID). The JSON error body contains more information. Response content type is application/json.
  * `204 No Content`. Manifest was successfully received, but all resources are already correctly represented on the server.
  * `304 Not Modified`. The version of the manifest on the server is the same one that is already there, so the manifest wasn’t stored. (Note that this doesn’t tell you anything about missing resources.)
 
@@ -158,7 +158,44 @@ Response:
 
 * `200 OK.` All good, current version of the aliases was put. The header also contains ETag for the aliases.
 * `400 Bad Request.` The document was possibly malformed. The JSON error body contains more information. Response content type is application/json.
-* `304 Not Modified`. The version of the aliases on the server is the same one that is already there, so the aliases weren’t stored.
+* `304 Not Modified`. The version of the aliases on the server is the same one that is already there.
+
+
+
+### Types
+
+The optional types.yaml file defines custom types that are known to this document/project. It is a feature of [Hone document format version 2.](Document v2.md).
+
+These simple endpoints let you get or put the custom types content.
+
+#### Get aliases
+
+    GET /v1/projects/53551a31e9cb4e000027f3f8/types
+
+Access level: user token or project token
+
+Response:
+
+* `404 Not Found.` This document was not found.
+* `304 Not Modified.` An ETag was included in the request, and the manifest on the server has the same ETag, i.e the client already has the current types.
+* `400 Bad Request.` The custom types are a feature of document format v2, but this document’s manifest is v1, therefore, it cannot contain any custom types. The result body is an error with the name `DocumentFormatIncompatibleError`.
+* `200 OK.` The document body contains the custom types content in YAML format, verbatim as it was previously uploaded. The content type is application/x-yaml.
+
+
+
+#### Put types
+
+    PUT /v1/projects/53551a31e9cb4e000027f3f8/types
+    Content-type: application/x-yaml
+
+Access level: user token
+
+Response:
+
+* `200 OK.` All good, current version of the types was put. The header also contains ETag for the types.
+* `400 Bad Request.` The document was possibly malformed. The JSON error body contains more information. Response content type is application/json.
+* `304 Not Modified`. The version of the types on the server is the same one that is already there.
+
 
 
 
