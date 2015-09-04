@@ -221,7 +221,8 @@ Response
           "name": "My Awesome App",
           "id": "53551a31e9cb4e000027f3f8",
           "vcs": "github",
-          "vcsUrl": "https://github.com/someone/exampleProject"
+          "platform": "ios",
+          "vcsUrl": "https://github.com/someone/exampleProject",
           "users": [
             {
               "id": "53551a31e9cb4e0000271234",
@@ -236,11 +237,11 @@ Response
           ],
           "latestLog": {
             "project": {
-              "_id": "53551a31e9cb4e000027f3f8",
+              "\_id": "53551a31e9cb4e000027f3f8",
               "name": "My Awesome App"
             },
             "user": {
-              "_id": "53551a31e9cb4e0000271234",
+              "\_id": "53551a31e9cb4e0000271234",
               "email": "bob@example.com",
               "name": "Bob Yerunkel"
             },
@@ -270,11 +271,11 @@ Response
           ],  
           "latestLog": {
             "project": {
-              "_id": "53551a31e9cb4e000027bee1",
+              "id": "53551a31e9cb4e000027bee1",
               "name": "Another Awesome App"
             },
             "user": {
-              "_id": "53551a31e9cb4e0000274567",
+              "id": "53551a31e9cb4e0000274567",
               "email": "ally@example.com",
               "name": "Ally Gator"
             },
@@ -318,11 +319,11 @@ Response
         ],
         "latestLog": {
           "project": {
-            "_id": "53551a31e9cb4e000027f3f8",
+            "id": "53551a31e9cb4e000027f3f8",
             "name": "My Awesome Project"
           },
           "user": {
-            "_id": "53551a31e9cb4e0000271234",
+            "id": "53551a31e9cb4e0000271234",
             "email": "bob@example.com",
             "name": "Bob Yerunkel"
           },
@@ -349,12 +350,20 @@ Request body should contain the project name encoded in JSON.
       "name": "Great App"
     }
 
-Optionally, there may be a `vcsUrl` specified, pointing to a valid Github repository URL.
+Optionally, there may be a `vcsUrl` specified, pointing to a valid Github repository URL
 
     {
       "name": "Great App",
       "vcsUrl": "https://github.com/someone/exampleProject"
     }
+
+There can also be a `platform` specified, which can be one of `ios`, `osx` or `android`. There can also be no platform, indicated by an empty or missing platform value.
+
+    {
+      "name": "Mac App",
+      "platform": "osx"
+    }
+
 
 
 Response
@@ -364,9 +373,10 @@ Response
     {
       "name": "Great App",
       "id": 53551a31e9cb4e000027abcd,
+      "platform": ""
     }
 
-`400 Bad Request`. The project could not be created for some reason, e.g no name was supplied, or vcsUrl was supplied but was invalid. The error response contains more details.
+`400 Bad Request`. The project could not be created for some reason, e.g no name was supplied, or vcsUrl was supplied but was invalid, or platform was supplied but was invalid. The error response contains more details.
 
 
 ### Delete a project
