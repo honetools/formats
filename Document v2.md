@@ -37,7 +37,7 @@ The custom types don’t contain any semantics and aren’t specific to any plat
 
 For a complete example of a custom types file, see the [Android custom types.](https://github.com/honetools/android/blob/master/app/src/main/assets/example.hone/types.yaml) What follows is a discussion and breakdown of the format.
 
-There are three kinds of custom types—aliases, enums and compound types.
+There are four kinds of custom types—aliases, enums, font name, and compound types.
 
 
 
@@ -74,6 +74,17 @@ The alias type specifies an alias for an existing primitive type. This may be us
       - 4: Natural
 
 Enums specify a selection for the user to choose from. Enums are backed by Hone’s primitive values (int, float or string). The `values` array specifies the list of possible values for this enum, as well as the display string for each value. The display string is shown to the user in Hone tool.
+
+
+
+### Font name type
+
+    FontName:
+      name: Font name
+      behavior: font_name
+      can_add_in_tool: 1
+
+Font name implies that the backing type is string. From the library’s perspective, the behavior is identical to a string. The functionality of the font name field in the tool is that instead of a freeform string, the tool displays a button to pick the font, where the list of available fonts is retrieved from the connected device.
 
 
 
