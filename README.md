@@ -16,6 +16,6 @@ This is the API that individual devices should be implement, so you could edit t
 
 
 
-## [Document format](Document.md)
+## [Document format](Document v2.md)
 
 This is the format of Hone documents that you edit with the Hone tool.
